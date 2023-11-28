@@ -1,0 +1,344 @@
+Practical 1
+Q1)Creating a series in python
+import pandas as pd
+
+data=[10,20,30,40,50]
+my_series=pd.Series(data)
+
+print("original series")
+print(my_series)
+
+
+Q2) Accessing elements by index
+#Accessing elements by index
+print("\n Accessing elements by index:")
+print("Element at index 2: ",my_series[2])
+print("Elements from index to 3: \n ",my_series[1:4])
+
+
+#Adding labels to the Series
+my_series_with_labels =  pd.Series(data,index=["A", "B", "C", "D", "E"])
+print("\n Series with custom labels: ")
+print(my_series_with_labels)
+
+-------------------------------------------------------------------------------------------------------------
+Practical 2
+Q3) Creating a dataframe
+import pandas as pd
+#Create a dictionary of data
+data = {
+    'Name': ['Riya','Ayon','Raj','Aniket','Eva'],
+    'Age': [21,30,35,28,25],
+    'City':['New York','San Francisco','Los Angeles','Chicago','Miami']
+}
+#Create a DataFrame from the dictionary
+df = pd.DataFrame(data)
+#Display the DataFrame
+print("Original DataFrame:")
+print(df)
+
+
+Q4)Accessing and manipulating data
+#Accessing and manipulating data
+print("Accessing and manipulating data:")
+
+#Select a single column by name
+print("Names:")
+print(df['Name'])
+
+
+Q5)Selecting multiple columns
+#Select multiple columns
+print("\n Name and Age:")
+df_AB = df[['Name', 'Age']]
+print(df_AB)
+
+
+Q6) Filter rows based on a condition
+#Filter rows based on a condition
+print("\n People older than 30:")
+print(df[df['Age'] > 30])
+
+Q7) Add a new column 
+#Add a new column
+df['Salary'] = [50000,60000,75000,45000,55000]
+print(df)
+
+
+Q8)Summary statistics
+#Summary statistics
+print("\nSummary Statistics: ")
+print("Mean Age: ",df['Age'].mean())
+print("Maximum Age: ",df['Age'].max())
+
+Q9)Grouping and aggregation
+#Grouping and aggregation
+print("\n Grouping and Aggregation:")
+city_group = df.groupby('City')
+print("Average Age by City: ")
+print(city_group['Age'].mean())
+
+
+Q10) Sorting
+#Sorting
+print("\n Sorting by Age:")
+sorted_df = df.sort_values(by='Age', ascending=False)
+print(sorted_df)
+
+-------------------------------------------------------------------------------------------------------------
+
+Practical 3
+Q11)Perform data cleaning and pre-processing with different files.
+import pandas as pd
+df = pd.read_csv(r'Superstore.csv', encoding = 'ISO-8859-1')
+df.head()
+
+
+#Finding the Missing and Zero values
+print(df.isnull().any().sum())   
+#print(filename.isnull().any().sum())
+
+
+#Drop all rows that contain missing values
+file = df.dropna()
+df.shape
+
+-------------------------------------------------------------------------------------------------------------
+import pandas as pd
+
+data = pd.read_csv('Sample-Superstore.csv', encoding = 'ISO-8859-1')
+subject = data.iloc[0:3,1:3]
+print (subject)
+
+subN = data[['Ship Mode', 'State']]
+print('subN: \n',subN)
+
+selectedN = data[['Ship Mode', 'State']][0:3]
+print('Selected data: \n', selectedN)
+
+-------------------------------------------------------------------------------------------------------------
+
+Practical 4
+Q12) Creating a Panel from a dictionary of Data Frame Objects and performing their operations.
+#panel
+import pandas as pd
+
+data1 = {'A': [1,2,3], 'B': [4,5,6] }
+data2 = {'C':[7,8,9], 'D': [10,11,12]}
+
+df1 = pd.DataFrame(data1)
+df2 = pd.DataFrame(data2)
+
+panel = {'DataFRame1': df1, 'Dataframe2': df2}
+
+
+print('Panel from dataframe dictionary: \n', panel['DataFRame1'])
+print( panel['Dataframe2'])
+#operation on frame
+print('Max of the dataframe 1: ', panel['DataFRame1']['A'].max())
+print('MEan of the dataframe 2 : ', panel['Dataframe2']['C'].mean())
+
+combined = pd.concat(panel.values(), axis =1)
+print ('Combined Data\n', combined)
+
+-----------------------------------------------------------------------------------------------------------
+Practical 5
+Q13)File operation
+# File handling operations in Python
+
+# Open a file in write mode ('w' or 'wt' for text mode)
+file_path = 'Practical 4.txt'
+with open(file_path, 'w') as file:
+    # Write content to the file
+    file.write("Hello, this is a sample file.\n")
+    file.write("Writing data to a file in Python.\n")
+    file.write("File handling is important in programming.")
+
+# Open the file in read mode ('r' or 'rt' for text mode)
+with open(file_path, 'r') as file:
+    # Read content from the file
+    content = file.read()
+    print("Content of the file:")
+    print(content)
+
+# Open the file in append mode ('a' or 'at' for text mode)
+with open(file_path, 'a') as file:
+    # Append additional content to the file
+    file.write("\nAppending more data to the file.")
+
+# Open the file again in read mode to see the updated content
+with open(file_path, 'r') as file:
+    # Read and print the updated content
+    updated_content = file.read()
+    print("\nUpdated content of the file:")
+    print(updated_content)
+-------------------------------------------------------------------------------------------------------------
+
+Practical 6
+Q)Perform data cleaning and pre-processing with different files.
+
+import pandas as pd
+df=pd.read_csv(r'Superstore.csv',encoding='ISO-8859-1')
+print(df)
+
+
+Q) finding missing values
+df.isnull().sum()
+
+-------------------------------------------------------------------------------------------------------------
+
+Practical 7
+Q)Write a program to handle missing and outlier values.
+import numpy as np
+import pandas as pd
+
+#Generate a sample dataset with missing values and outliers
+data = {'Feature1': [1,2,3,np.nan,5,6,7,8,9,10],
+         'Feature2': [10,20,30,40,50,60,70,80,90,100]}
+
+df = pd.DataFrame(data)
+
+#Handle missing values (using mean imputation)
+df['Feature1'].fillna(df['Feature1'].mean(), inplace=True)
+
+#Detect and handle outliers(using Z-score method)
+from scipy import stats
+
+z_scores = np.abs(stats.zscore(df))
+threshold = 3
+
+outliers = np.where(z_scores > threshold)
+
+#Remove outliers
+df_no_outliers = df[(z_scores < threshold).all(axis=1)]
+#Print the cleaned DataFrame
+print("Original DataFrame: ")
+print(df)
+print("\nDataFrame with missing values handled: ")
+print(df_no_outliers)
+
+-------------------------------------------------------------------------------------------------------------
+Practical 8
+Q) Demonstrate Data exploration on series and data frame.
+
+import pandas as pd
+import numpy as np
+# Create a sample dataset
+data = {'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Emma'],
+        'Age': [25, 30, 22, 35, 28],
+        'Salary': [50000, 60000, 45000, 70000, 55000],
+        'City': ['New York', 'San Francisco', 'Los Angeles', 'Chicago', 'Boston']}
+# Create a DataFrame from the dataset
+df = pd.DataFrame(data)
+# Display the DataFrame
+print("Original DataFrame:")
+print(df)
+print("\n")
+# Data exploration on Series
+age_series = df['Age']
+
+# Basic statistics on the Age series
+print("Summary statistics for Age:")
+print(age_series.describe())
+print("\n")
+# Check for missing values in the Age series
+print("Missing values in Age:")
+print(age_series.isnull().sum())
+print("\n")
+# Data exploration on DataFrame
+# Summary statistics for the entire DataFrame
+print("Summary statistics for the DataFrame:")
+print(df.describe())
+print("\n")
+
+# Count the occurrences of each unique value in the City column
+print("Count of unique values in the City column:")
+print(df['City'].value_counts())
+print("\n")
+# Grouping by City and calculating mean salary
+grouped_by_city = df.groupby('City')['Salary'].mean()
+print("Mean salary grouped by City:")
+print(grouped_by_city)
+-------------------------------------------------------------------------------------------------------------
+Practical 9
+Q) Perform Stats analysis
+from scipy import stats
+
+data = [22,67,54,90,87,34,67,45,39,76]
+
+mean = np.mean(data)
+min = np.min(data)
+max = np.max(data)
+stddev = np.std(data)
+range = max - min
+median = np.median(data)
+var = np.var(data)
+
+print('Sats Summery: ')
+print('Mean: ',mean)
+print('MIn: ',min)
+print('MAx: ',max)
+print('Standard deviation: ',stddev)
+print('Range: ',range)
+print('Median: ',median)
+print('veriance: ',var)
+
+-------------------------------------------------------------------------------------------------------------
+Practical 10
+Q) Visualize data through Matplotlib (Line and scatter plot).
+import matplotlib.pyplot as plt
+
+x=[1,2,3,4,5]
+y=[10,12,5,8,16]
+
+#Line Plot
+plt.figure(figsize=(8,4))
+plt.plot(x,y,marker='o',linestyle='-',color='b',label='Line Plot')
+plt.title('Line Plot Example')
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+#Scatter Plot
+plt.figure(figsize=(8,4))
+plt.plot(x,y,marker='o',linestyle='-',color='r',label='Scatter Plot')
+plt.title('Scatter Plot Example')
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+plt.legend()
+plt.grid(True)
+
+Q)  Visualize data through Seaborn plotting (Scatter plot).
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data = sns.load_dataset("iris")
+
+plt.figure(figsize=(8,6))
+sns.scatterplot(data=data,x="sepal_length",y="sepal_width",hue="species")
+plt.title("Seaborn Scatter Plot Example")
+plt.xlabel("sepal Length")
+plt.ylabel("sepal width")
+
+plt.show()
+
+
+Q) Line plot with seaborn
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# loading dataset
+data = sns.load_dataset("iris")
+
+# draw lineplot
+sns.lineplot(x="sepal_length", y="sepal_width", data=data)
+
+# setting the title using Matplotlib
+plt.title('Title using Matplotlib Function')
+
+plt.show()
+
+
+
